@@ -1,17 +1,21 @@
 import React from 'react'
 
 //Material imports
-import { Container } from '@material-ui/core'
+// import {Container, Grid} from '@material-ui/core'
 // import {makeStyles, createStyles, Theme} from '@material-ui/core/styles'
+
+//Component imports
+import HomeBanner from '../components/HomeBanner'
+
 
 const Home = () => {
     return (
         <>
-            <Container>
-                Hello
-            </Container>
+            <HomeBanner/>
+            <section>
+            </section>
         </>
     )
 }
 
- export default Home
+export default Home
