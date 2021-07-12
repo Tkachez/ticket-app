@@ -128,6 +128,7 @@ const SignUp: FC = () => {
                             <TextField
                                 type='number'
                                 value={age}
+                                inputProps={{min: 0}}
                                 onChange={handleAgeChange}
                                 fullWidth
                                 label="Age"
