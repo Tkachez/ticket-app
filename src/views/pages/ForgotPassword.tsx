@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {Typography, TextField, Button} from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert'
 import {Link} from 'react-router-dom'
-import AppForm from '../components/AppForm'
+import AppForm from '../layout/AppForm'
 import {useAuth} from '../../context/AuthContext'
 
 const useStyles = makeStyles((theme) => ({

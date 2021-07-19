@@ -1,9 +1,10 @@
 import React, {FormEventHandler, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {Typography, TextField, Button} from '@material-ui/core';
+import {Typography, TextField, Button, Fade} from '@material-ui/core';
 import {Link , useHistory} from 'react-router-dom'
-import AppForm from '../components/AppForm'
+import AppForm from '../layout/AppForm'
 import {useAuth} from '../../context/AuthContext'
+import {Alert} from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -24,6 +25,7 @@ function SignIn() {
     const [emailValue, setEmailValue] = useState('')
     const [passwordValue, setPasswordValue] = useState('')
     const [disabled, setDisabled] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const {login} = useAuth()
 
     const handlePasswordChange = (e: any) => {
@@ -43,7 +45,7 @@ function SignIn() {
             setDisabled(false)
             history.push('/')
         }).catch(err => {
-            console.log(err)
+            setError(err.message)
             setDisabled(false)
         })
     };
@@ -62,6 +64,9 @@ function SignIn() {
                         </Button>
                     </Typography>
                 </>
+                <Fade in={!!error} timeout={1500}>
+                    <Alert severity='error'>{error}</Alert>
+                </Fade>
                 <form onSubmit={handleSubmit} className={classes.form} noValidate>
                     <TextField
                         value={emailValue}

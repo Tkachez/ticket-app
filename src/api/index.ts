@@ -1,32 +1,72 @@
-import {v4 as uuid} from 'uuid'
-import {firestore} from '../firebase'
-import {UserData} from '../types'
-
+import app, {auth, firestore} from '../firebase'
 
 const usersApi = {
-    updateUser: (userID: string, data: UserData) => {
-        firestore.collection('users').doc(userID).set(data).then(res => {
-            console.log(res)
-        })
+    signup: async (email: string, password: string) => {
+        const {user} = await auth.createUserWithEmailAndPassword(email, password)
+
+        return user
     },
-    createUser: async (user: UserData) => {
-        const uid = uuid()
-        firestore.collection('users').add({
-            uid,
-            ...user
-        }).then(res => {
-            console.log(res)
-        }).catch(err => console.log(err))
-    }
+    updateUser: (user: any) =>
+        firestore.collection('users')
+            .doc(user.uid)
+            .set(user)
+            .then(snapshot => {
+                return snapshot
+            }),
+
+    createUser: async (data: any, uid: string) => {
+        return firestore.collection('users')
+            .doc(uid)
+            .set(data)
+            .then(() => console.log('Successfully created user'))
+            .catch(err => console.log(err))
+    },
+    getUser: async (userId: string) => {
+        return firestore.collection('users')
+            .doc(userId)
+            .get()
+            .then(snapshot => snapshot.data())
+    },
+
+    uploadPhoto: async (file: any, userId: string) => {
+        const storageRef = app.storage().ref()
+        const fileRef = storageRef.child(`${file.name}_${userId}`)
+
+        return fileRef.put(file)
+    },
+    getPhoto: async (ref: any) => {
+        return ref.getDownloadURL()
+    },
+    deletePhoto: async (ref: any) => ref.delete()
+        .then(() => console.log('Photo removed'))
 }
 
-const ticketsApi = {}
+const eventsApi = {
+    getTotalEvents: async () => firestore.collection('events')
+        .get()
+        .then(snapshot => snapshot.size),
 
-const eventsApi = {}
+    getEvent: async (id: number) => firestore.collection('events')
+        .where('id', '==', id)
+        .get()
+        .then(snapshot => snapshot.docs),
+
+    getEvents: async (lastDoc: any[], perPage: number) => firestore.collection('events')
+        .orderBy('start_time')
+        .startAfter(lastDoc)
+        .limit(perPage)
+        .get()
+        .then(snapshot => snapshot.docs),
+
+    updateEvent: async (eventSnapshot: any, payload: any) => firestore.collection('events')
+        .doc(eventSnapshot.id)
+        .set(payload)
+        .then(() => console.log('Successfully updated event'))
+        .catch(err => err),
+}
 
 const api = {
     ...usersApi,
-    ...ticketsApi,
     ...eventsApi,
 }
 

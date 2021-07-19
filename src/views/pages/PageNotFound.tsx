@@ -1,9 +1,10 @@
 import React from 'react'
+import PageNotFoundBanner from '../components/PageNotFoundBanner'
 
 const PageNotFound = () => {
     return (
         <>
-            <div>Hello</div>
+            <PageNotFoundBanner/>
         </>
     )
 }

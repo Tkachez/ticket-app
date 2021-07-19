@@ -11,7 +11,6 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         alignItems: 'center',
         [theme.breakpoints.up('sm')]: {
             height: '80vh',
-            minHeight: 500,
             maxHeight: 1300,
         },
     },
@@ -50,10 +49,10 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 
 interface Props {
     children: ReactElement[],
-    backgroundClassName: string
+    backgroundClassName: string,
 }
 
-const HomeBannerLayout: FC<Props> = (props): ReactElement => {
+const BannerLayout: FC<Props> = (props): ReactElement => {
     const classes = useStyles()
     const {children, backgroundClassName} = props
 
@@ -68,4 +67,4 @@ const HomeBannerLayout: FC<Props> = (props): ReactElement => {
     )
 }
 
-export default HomeBannerLayout
+export default BannerLayout

@@ -12,7 +12,9 @@ const HeaderMenu: FC<Props> = ({menu, anchor}) => {
     return (
         <>
             <Menu open={menu} id='header-menu' anchorEl={anchor}>
-                <MenuItem>Hello</MenuItem>
+                <MenuItem>Events</MenuItem>
+                <MenuItem>Terms</MenuItem>
+                <MenuItem>Contacts</MenuItem>
             </Menu>
         </>
     )

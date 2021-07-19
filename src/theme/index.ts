@@ -56,8 +56,6 @@ const fontHeader = {
 
 const rawTheme = createMyTheme(palette, typography, fontHeader)
 
-
-
 const theme = {
     ...rawTheme,
     palette: {

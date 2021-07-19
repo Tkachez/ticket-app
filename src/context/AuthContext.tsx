@@ -1,46 +1,33 @@
-import React, {ReactElement, FC, useContext, useEffect, useState, createContext} from 'react'
+import React, {ReactElement, FC, useContext, useEffect, useState} from 'react'
 import {UserStoreImpl} from '../stores/UserStore'
 import {auth} from '../firebase'
-import api from '../api'
-
-import {UserData} from '../types'
+import firebase from 'firebase'
+import {UserData} from "../types";
 
 type Props = {
     children: ReactElement
 }
 
 type AuthContextType = {
-    signup: (email: any, password: any, additionalData: UserData) => Promise<any>,
-    login: (email: any, password: any) => Promise<any>,
-    resetPassword: (email: any) => Promise<any>,
-    logout: () => Promise<any>,
+    signup: (email: string, password: string, additionalData: UserData) => Promise<firebase.auth.UserCredential>,
+    login: (email: string, password: string) => Promise<firebase.auth.UserCredential>,
+    resetPassword: (email: string) => Promise<void>,
+    logout: () => Promise<void>,
 }
 
-export const AuthContext= React.createContext<AuthContextType>({
-    signup: async() => false,
-    login: async() => false,
-    resetPassword: async() => false,
-    logout: async() => false,
-})
+export const AuthContext= React.createContext<AuthContextType>({} as AuthContextType)
 
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider: FC<Props> = ({children}) => {
-    const [loading, setLoading] = useState<any>(true)
-    const userStore = useContext(createContext(UserStoreImpl))
+    const [loading, setLoading] = useState<boolean>(true)
+    const [data, setData] = useState<UserData>({} as UserData)
 
-    const signup = async (email: string, password: any, additionalData: UserData) => {
-        console.log(additionalData)
-        const {user} = await auth.createUserWithEmailAndPassword(email, password)
-        const payload = {
-            ...additionalData,
-            email: user?.email,
-            createdAt: new Date(),
-        }
-
-        return api.createUser(payload)
+    const signup = async (email: string, password: string, additionalData: UserData) => {
+        setData(additionalData)
+        return auth.createUserWithEmailAndPassword(email, password)
     }
-    const login = (email: string, password: any) => {
+    const login = async (email: string, password: string) => {
         return auth.signInWithEmailAndPassword(email, password)
     }
 
@@ -53,7 +40,8 @@ export const AuthProvider: FC<Props> = ({children}) => {
     }
 
     useEffect(() => auth.onAuthStateChanged(user => {
-        userStore.setUser(user)
+        UserStoreImpl.setAuth(!!user)
+        UserStoreImpl.setUser(user, data)
         setLoading(false)
     }))
 

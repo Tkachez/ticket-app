@@ -1,19 +1,19 @@
 import React from 'react'
 
-//Material imports
-// import {Container, Grid} from '@material-ui/core'
-// import {makeStyles, createStyles, Theme} from '@material-ui/core/styles'
-
 //Component imports
-import HomeBanner from '../components/HomeBanner'
+import HomeBanner from '../components/home/HomeBanner'
+import EventsBanner from '../components/home/EventsBanner'
+import HomeValues from '../components/home/HomeValues'
+import AppFooter from "../layout/AppFooter";
 
 
 const Home = () => {
     return (
         <>
             <HomeBanner/>
-            <section>
-            </section>
+            <HomeValues/>
+            <EventsBanner/>
+            <AppFooter/>
         </>
     )
 }

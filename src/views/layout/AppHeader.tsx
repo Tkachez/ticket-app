@@ -2,19 +2,15 @@ import React, {FC, useState, useRef} from 'react'
 import {Link, useHistory} from 'react-router-dom'
 
 //Material imports
-import {AppBar, IconButton, Toolbar, Button, Typography} from '@material-ui/core'
+import {AppBar, IconButton, Toolbar, Button, Avatar} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import {createStyles, makeStyles, Theme} from '@material-ui/core/styles'
-import {UserStore} from '../../stores/UserStore'
+import {UserStoreImpl} from '../../stores/UserStore'
 import logo from '../../assets/static/Logo.png'
 import {observer} from 'mobx-react-lite'
 import HeaderMenu from '../components/HeaderMenu'
 
-
-interface AppHeaderProps {
-    userStore: UserStore
-}
+import Typography from '../components/Typography'
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
     bar: {
@@ -27,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
         flexGrow: 1,
     },
     menuButton: {
+        cursor: 'pointer',
         marginRight: theme.spacing(2),
     },
     logo: {
@@ -44,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     },
 }))
 
-const AppHeader: FC<AppHeaderProps> = observer(({userStore}) => {
+const AppHeader: FC = observer(() => {
     const classes = useStyles()
     const history = useHistory()
     const button = useRef(null)
@@ -54,19 +51,25 @@ const AppHeader: FC<AppHeaderProps> = observer(({userStore}) => {
         setMenu(!menu)
     }
 
+    const handleAvatarClick = () => {
+        history.push('/profile')
+    }
+
     return (
         <AppBar position='relative' className={classes.bar}>
             <Toolbar>
-                <IconButton ref={button} edge="start" className={classes.menuButton} color="inherit" aria-label="menu" aria-controls="header-menu" onClick={handleMenu}>
+                <IconButton ref={button} edge="start" className={classes.menuButton} color="inherit" aria-label="menu"
+                            aria-controls="header-menu" onClick={handleMenu}>
                     <MenuIcon/>
                     <HeaderMenu menu={menu} anchor={button.current}/>
                 </IconButton>
                 <div className={classes.logo} onClick={() => history.push('/')}/>
-                {userStore.user ?
-                    <IconButton component={Link} to='/profile' edge="start" className={classes.menuButton}
-                                color="inherit" aria-label="menu">
-                        <AccountCircleIcon/>
-                    </IconButton>
+                {UserStoreImpl.authenticated && UserStoreImpl.user ?
+                    <Avatar alt="Profile Image"
+                            src={UserStoreImpl.user.photoUrl}
+                            className={classes.menuButton}
+                            color="inherit"
+                            onClick={handleAvatarClick}/>
                     :
                     <Button className={classes.login} component={Link} to='/login'>
                         <Typography>

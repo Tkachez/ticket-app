@@ -1,9 +1,11 @@
-import React, {FC, FormEventHandler, useState} from 'react';
+import React, {FC, FormEventHandler, useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles'
-import {Grid, Button, Typography, TextField} from '@material-ui/core'
-import AppForm from '../components/AppForm'
+import {Grid, Button, Typography, TextField, Fade} from '@material-ui/core'
+import AppForm from '../layout/AppForm'
 import {Link, useHistory} from 'react-router-dom'
 import {useAuth} from '../../context/AuthContext'
+import {UserStoreImpl} from "../../stores/UserStore";
+import {Alert} from "@material-ui/lab";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +28,17 @@ const SignUp: FC = () => {
     const [passwordValue, setPasswordValue] = useState('')
     const [firstNameValue, setFirstNameValue] = useState('')
     const [lastNameValue, setLastNameValue] = useState('')
+    const [error, setError] = useState<string | null>(null)
     const [age, setAge] = useState('')
     const [sex, setSex] = useState('')
     const [disabled, setDisabled] = useState(false)
     const {signup} = useAuth()
+
+    useEffect(() => {
+        if (UserStoreImpl.authenticated) {
+            history.push('/profile')
+        }
+    })
 
     const handleEmailChange = (e: any) => {
         setEmailValue(e.target.value)
@@ -60,6 +69,8 @@ const SignUp: FC = () => {
         setDisabled(true)
 
         return signup(emailValue, passwordValue, {
+            uid: '',
+            email: '',
             firstName: firstNameValue,
             lastName: lastNameValue,
             role: 'user',
@@ -70,7 +81,7 @@ const SignUp: FC = () => {
             setDisabled(false)
             history.push('/')
         }).catch(err => {
-            console.log(err)
+            setError(err.message)
             setDisabled(false)
         })
     }
@@ -88,6 +99,9 @@ const SignUp: FC = () => {
                         </Button>
                     </Typography>
                 </React.Fragment>
+                <Fade in={!!error} timeout={1500}>
+                    <Alert severity='error'>{error}</Alert>
+                </Fade>
                 <form onSubmit={handleSubmit} className={classes.form}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>

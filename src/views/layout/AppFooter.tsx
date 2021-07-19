@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import {Link} from 'react-router-dom'
 import {Button, Container, Typography} from '@material-ui/core';
-import logo from '../../assets/static/Logo_black.png'
+import logo from '../../assets/static/Logo.png'
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
-        backgroundColor: '#f50057',
+        backgroundColor: '#28282a',
     },
     container: {
         marginTop: theme.spacing(8),
@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
         paddingTop: theme.spacing(0.5),
         paddingBottom: theme.spacing(0.5),
     },
+    link: {
+        color: "white",
+    },
     language: {
         marginTop: theme.spacing(1),
         width: 150,
@@ -69,13 +72,13 @@ export default function AppFooter() {
                     <Grid item xs={6} sm={4} md={2}>
                         <ul className={classes.list}>
                             <li className={classes.listItem}>
-                                <Button component={Link} to='/legal'>Legal</Button>
+                                <Button component={Link} to='/legal' className={classes.link}>Legal</Button>
                             </li>
                             <li className={classes.listItem}>
-                                <Button component={Link} to='/terms'>Terms</Button>
+                                <Button component={Link} to='/terms' className={classes.link}>Terms</Button>
                             </li>
                             <li className={classes.listItem}>
-                                <Button component={Link} to='/privacy'>Privacy</Button>
+                                <Button component={Link} to='/privacy' className={classes.link}>Privacy</Button>
                             </li>
                         </ul>
                     </Grid>
